@@ -92,12 +92,18 @@ class Filters extends Component {
 
 class PlayLists extends Component {
   render() {
+    let varPlaylist = this.props.playLists;
     return (
       <div style={{ ...varDefaultStyle, width: "20%", display: 'inline-block' }}>
         <img />
-        <h3>Playlist Name</h3>
+        <h3>{varPlaylist.name}</h3>
         <ul>
-          <li>Song 1</li>  <li>Song 2</li>  <li>Song 3</li>
+          {
+            varPlaylist.songs.map(
+              songs =>
+              <li>{songs.name}</li>
+            )
+          }
         </ul>
       </div>
     );
@@ -140,15 +146,16 @@ class App extends Component {
             <PlaylistCounter playLists={this.state.serverData.user.playLists} />
             <HoursCounter playLists={this.state.serverData.user.playLists} />
             <Filters />
-            <PlayLists />
-            <PlayLists />
-            <PlayLists />
-            <PlayLists />
+            {
+              this.state.serverData.user.playLists.map(
+                playLists => 
+                <PlayLists playLists={playLists}/>  
+              )
+            }
           </div> : <h1 style={varDefaultStyle}>Loading...</h1>
         }
       </div>
     );
   }
 }
-
 export default App;
