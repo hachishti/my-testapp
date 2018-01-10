@@ -13,39 +13,39 @@ let fakeServerData = {
     userLastName: 'Brown',
     playLists: [
       {
-        name: 'My Playlist 1',
+        name: 'DevTips',
         songs: [
-          { name: 'song1 list1', duration: 1256 },
-          { name: 'song2 list1', duration: 5454 },
-          { name: 'song3 list1', duration: 4477 }
+          { name: 'Tutorial 1', duration: 1256 },
+          { name: 'Tutorial 2', duration: 5454 },
+          { name: 'Tutorial 3', duration: 4477 }
         ]
       }
       ,
       {
-        name: 'My playlist 2',
+        name: 'Technoledge',
         songs: [
-          { name: 'song1 list2', duration: 555 },
-          { name: 'song2 list2', duration: 5224 }
+          { name: 'React with JSX', duration: 555 },
+          { name: 'React States', duration: 5224 }
         ]
       }
       ,
       {
-        name: 'My Playlist 3',
+        name: 'Car TV',
         songs: [
-          { name: 'song1 list3', duration: 1256 },
-          { name: 'song2 list3', duration: 5454 },
-          { name: 'song3 list3', duration: 4477 }
+          { name: 'Audi A8 2018', duration: 1256 },
+          { name: 'Mercedes S500', duration: 5454 },
+          { name: 'BMW X7 2018', duration: 4477 }
         ]
       }
       ,
       {
-        name: 'My Playlisy 4',
+        name: 'My Favourite Songs',
         songs: [
-          { name: 'song1 list4', duration: 545 },
-          { name: 'song2 list4', duration: 98 },
-          { name: 'song3 list4', duration: 787 },
-          { name: 'song4 list4', duration: 787 },
-          { name: 'song5 list4', duration: 3434 }
+          { name: 'song1', duration: 545 },
+          { name: 'song2', duration: 98 },
+          { name: 'song3', duration: 787 },
+          { name: 'song4', duration: 787 },
+          { name: 'song5', duration: 3434 }
         ]
       }
     ]
@@ -83,7 +83,9 @@ class Filters extends Component {
     return (
       <div style={varDefaultStyle}>
         <img />
-        <input type="text" />
+        <input type="text" onKeyUp ={event =>
+        this.props.onTextChange(event.target.value)
+        }/>
 
       </div>
     );
@@ -101,7 +103,7 @@ class PlayLists extends Component {
           {
             varPlaylist.songs.map(
               songs =>
-              <li>{songs.name}</li>
+                <li>{songs.name}</li>
             )
           }
         </ul>
@@ -114,14 +116,17 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = { serverData: {} }
+    this.state =
+      {
+        serverData: {},
+        filterString: ''
+      }
   }
 
   componentDidMount() {
     setTimeout(() => {
       this.setState({ serverData: fakeServerData })
-    }, 2000);
-
+    }, 1000);
   }
 
   render() {
@@ -145,12 +150,15 @@ class App extends Component {
           <div>
             <PlaylistCounter playLists={this.state.serverData.user.playLists} />
             <HoursCounter playLists={this.state.serverData.user.playLists} />
-            <Filters />
+            <Filters onTextChange={text => this.setState({filterString: text})}/>
             {
-              this.state.serverData.user.playLists.map(
-                playLists => 
-                <PlayLists playLists={playLists}/>  
-              )
+              this.state.serverData.user.playLists.filter(playLists =>
+                playLists.name.toLowerCase().includes(
+                  this.state.filterString.toLowerCase())
+              ).map(
+                playLists =>
+                  <PlayLists playLists={playLists} />
+                )
             }
           </div> : <h1 style={varDefaultStyle}>Loading...</h1>
         }
